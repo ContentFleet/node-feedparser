@@ -506,11 +506,11 @@ FeedParser.prototype.handleMeta = function handleMeta (node, type, options) {
           meta.author = utils.get(el.name) || utils.get(el.email) || utils.get(el.uri);
         }
         else if (utils.get(el)) {
-          author = addressparser(utils.get(el))[0];
+          author = addressparser(utils.get(el).replace(/[<:\(]+$/, ''))[0] || {};
           el['name'] = author.name;
           el['email'] = author.address;
           if (meta.author === null || name == 'managingeditor') {
-            meta.author = author.name || author.address;
+            meta.author = author.name || author.address || '';
           }
         }
         break;
@@ -797,10 +797,10 @@ FeedParser.prototype.handleItem = function handleItem (node, type, options){
       case('author'):
         var author = {};
         if (utils.get(el)) { // RSS
-          author = addressparser(utils.get(el))[0];
+          author = addressparser(utils.get(el).replace(/[<:\(]+$/, ''))[0] || {};
           el['name'] = author.name;
           el['email'] = author.address;
-          item.author = author.name || author.address;
+          item.author = author.name || author.address || '';
         } else {
           item.author = utils.get(el.name) || utils.get(el.email) || utils.get(el.uri);
         }
